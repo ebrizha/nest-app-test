@@ -14,7 +14,7 @@ spec:
       containers:
         - name: migrations
           image: ebrizha/nest-app-test:IMAGE_TAG
-          command: ["npm", "run", "migration:run"]
+          command: ["node", "dist/infrastructure/database/run-migrations.js"]
           env:
             - name: POSTGRES_USER
               valueFrom:
