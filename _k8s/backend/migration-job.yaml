@@ -1,0 +1,17 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backend-migrations
+spec:
+  template:
+    spec:
+      containers:
+        - name: migrations
+          image: ebrizha/backend:IMAGE_TAG
+          command: ["npm","run","migration:run"]
+
+          envFrom:
+            - secretRef:
+                name: postgres-secret
+
+      restartPolicy: Never

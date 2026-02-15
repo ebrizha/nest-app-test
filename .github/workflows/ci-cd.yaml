@@ -1,0 +1,45 @@
+name: Backend CI/CD
+
+on:
+  push:
+    paths:
+      - backend/**
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - run: npm ci
+      - run: npm test
+      - run: npm run build
+
+      - name: Docker login
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Build image
+        run: docker build -t ebrizha/backend:${{ github.sha }} .
+
+      - name: Push image
+        run: docker push ebrizha/backend:${{ github.sha }}
+
+      - name: Inject tag
+        run: |
+          sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" ../_k8s/backend/backend-deployment.yaml
+          sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" ../_k8s/backend/migration-job.yaml
+
+      - name: Run migrations
+        run: kubectl apply -f ../_k8s/backend/migration-job.yaml
+
+      - name: Deploy backend
+        run: kubectl apply -f ../_k8s/backend/backend-deployment.yaml
