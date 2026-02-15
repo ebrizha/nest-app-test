@@ -7,7 +7,7 @@ spec:
     spec:
       containers:
         - name: migrations
-          image: ebrizhs/nest-app-test:IMAGE_TAG
+          image: ebrizha/nest-app-test:IMAGE_TAG
           command: ["npm","run","migration:run"]
 
           envFrom:

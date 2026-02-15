@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: nest-app-test
-          image: ebrizhs/nest-app-test:IMAGE_TAG
+          image: ebrizha/nest-app-test:IMAGE_TAG
           ports:
             - containerPort: 3000
 
