@@ -1,7 +1,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  generateName: nest-app-test-migrations-
+  name: nest-app-test-migrations
+  labels:
+    app: nest-app-test-migrations
 spec:
   template:
     metadata:
