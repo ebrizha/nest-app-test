@@ -37,7 +37,7 @@ jobs:
           sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" _k8s/backend/migration-job.yaml
 
       - name: Run migrations
-        run: kubectl apply -f ../_k8s/backend/migration-job.yaml
+        run: kubectl apply -f _k8s/backend/migration-job.yaml
 
       - name: Deploy backend
-        run: kubectl apply -f ../_k8s/backend/backend-deployment.yaml
+        run: kubectl apply -f _k8s/backend/backend-deployment.yaml
