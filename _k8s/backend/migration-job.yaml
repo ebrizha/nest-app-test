@@ -14,7 +14,17 @@ spec:
       containers:
         - name: migrations
           image: ebrizha/nest-app-test:IMAGE_TAG
-          command: ["node", "dist/infrastructure/database/run-migrations.js"]
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for Postgres at $POSTGRES_HOST:$POSTGRES_PORT..."
+              until nc -z $POSTGRES_HOST $POSTGRES_PORT; do
+                echo "Postgres not ready, sleeping 2s..."
+                sleep 2
+              done
+              echo "Postgres ready, running migrations..."
+              node dist/infrastructure/database/run-migrations.js
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -32,4 +42,14 @@ spec:
                   name: postgres-secret
                   key: POSTGRES_DB
             - name: POSTGRES_HOST
-              value: postgres
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_HOST
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PORT
+            - name: NODE_ENV
+              value: production
