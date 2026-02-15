@@ -1,13 +1,13 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: backend-migrations
+  name: nest-app-test-migrations
 spec:
   template:
     spec:
       containers:
         - name: migrations
-          image: ebrizha/backend:IMAGE_TAG
+          image: ebrizhs/nest-app-test:IMAGE_TAG
           command: ["npm","run","migration:run"]
 
           envFrom:
