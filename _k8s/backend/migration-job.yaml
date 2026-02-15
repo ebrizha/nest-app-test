@@ -1,17 +1,33 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: nest-app-test-migrations
+  generateName: nest-app-test-migrations-
 spec:
   template:
+    metadata:
+      labels:
+        app: nest-app-test-migrations
     spec:
+      restartPolicy: OnFailure
       containers:
         - name: migrations
           image: ebrizha/nest-app-test:IMAGE_TAG
-          command: ["npm","run","migration:run"]
-
-          envFrom:
-            - secretRef:
-                name: postgres-secret
-
-      restartPolicy: Never
+          command: ["npm", "run", "migration:run"]
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: POSTGRES_DB
+            - name: POSTGRES_HOST
+              value: postgres
