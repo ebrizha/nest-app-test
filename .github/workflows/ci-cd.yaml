@@ -37,7 +37,10 @@ jobs:
           sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" _k8s/backend/migration-job.yaml
 
       - name: Run migrations
-        run: kubectl apply -f _k8s/backend/migration-job.yaml
+        run: |
+          kubectl delete job nest-app-test-migrations --ignore-not-found
+          kubectl apply -f _k8s/backend/migration-job.yaml
+          kubectl logs job/nest-app-test-migrations
 
       - name: Deploy backend
         run: kubectl apply -f _k8s/backend/backend-deployment.yaml
