@@ -31,10 +31,10 @@ jobs:
       - name: Push image
         run: docker push ebrizha/nest-app-test:${{ github.sha }}
 
-      - name: Inject tag
+      - name: Inject image tag into deployment
         run: |
-          sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" ../_k8s/backend/backend-deployment.yaml
-          sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" ../_k8s/backend/migration-job.yaml
+          sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" _k8s/backend/backend-deployment.yaml
+          sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" _k8s/backend/migration-job.yaml
 
       - name: Run migrations
         run: kubectl apply -f ../_k8s/backend/migration-job.yaml
