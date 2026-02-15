@@ -11,6 +11,8 @@ async function bootstrap() {
     credentials: true,
   });
 
+  app.setGlobalPrefix('api');
+
   const config = new DocumentBuilder()
     .setTitle('Reviews API')
     .setDescription('REST API for reviews use-cases')
