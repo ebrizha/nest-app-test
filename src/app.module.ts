@@ -11,6 +11,7 @@ import { ModulesModule } from './modules/modules.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],
+      ignoreEnvFile: process.env.NODE_ENV === 'production',
     }),
     TypeOrmDatabaseModule,
     ModulesModule,

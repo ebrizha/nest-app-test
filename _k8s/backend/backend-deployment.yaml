@@ -24,6 +24,10 @@ spec:
             - secretRef:
                 name: postgres-secret
 
+          env:
+            - name: NODE_ENV
+              value: production
+
           readinessProbe:
             httpGet:
               path: /health
