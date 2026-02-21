@@ -32,15 +32,19 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
       - name: Build image
-        run: docker build -t ebrizha/nest-app-test:${{ github.sha }} .
+        run: |
+          docker build -t ebrizha/nest-app-test:${{ github.sha }} \
+                       -t ebrizha/nest-app-test:latest .
 
       - name: Push image
-        run: docker push ebrizha/nest-app-test:${{ github.sha }}
+        run: |
+          docker push ebrizha/nest-app-test:${{ github.sha }}
+          docker push ebrizha/nest-app-test:latest
 
       - name: Deploy with Helm
         run: |
           helm upgrade --install app ./helm-chart/app-chart \
             --set nestApp.image.tag=${{ github.sha }} \
             --reuse-values \
-            --atomic \
+            --rollback-on-failure \
             --timeout 5m
