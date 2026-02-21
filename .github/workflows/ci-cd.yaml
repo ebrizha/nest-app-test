@@ -13,6 +13,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Checkout Helm chart
+        uses: actions/checkout@v3
+        with:
+          repository: ebrizha/env-app-test
+          path: helm-chart
+          token: ${{ secrets.GH_PAT }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -33,5 +40,6 @@ jobs:
 
       - name: Deploy with Helm
         run: |
-          helm upgrade --install app ./helm/app-chart \
-            --set nestApp.image.tag=${{ github.sha }}
+          helm upgrade --install app ./helm-chart/helm/app-chart \
+            --set nestApp.image.tag=${{ github.sha }} \
+            --reuse-values
