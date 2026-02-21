@@ -31,16 +31,7 @@ jobs:
       - name: Push image
         run: docker push ebrizha/nest-app-test:${{ github.sha }}
 
-      - name: Inject image tag into deployment
+      - name: Deploy with Helm
         run: |
-          sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" _k8s/backend/backend-deployment.yaml
-          sed -i '' "s|IMAGE_TAG|${{ github.sha }}|g" _k8s/backend/migration-job.yaml
-
-      - name: Run migrations
-        run: |
-          kubectl delete job nest-app-test-migrations --ignore-not-found
-          kubectl apply -f _k8s/backend/migration-job.yaml
-          kubectl logs job/nest-app-test-migrations
-
-      - name: Deploy backend
-        run: kubectl apply -f _k8s/backend/backend-deployment.yaml
+          helm upgrade --install app ./helm/app-chart \
+            --set nestApp.image.tag=${{ github.sha }}
