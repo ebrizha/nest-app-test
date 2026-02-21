@@ -41,4 +41,6 @@ jobs:
         run: |
           helm upgrade --install app ./helm-chart/app-chart \
             --set nestApp.image.tag=${{ github.sha }} \
-            --reuse-values
+            --reuse-values \
+            --atomic \
+            --timeout 5m
