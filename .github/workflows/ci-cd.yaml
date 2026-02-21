@@ -18,7 +18,6 @@ jobs:
         with:
           repository: ebrizha/env-app-test
           path: helm-chart
-          token: ${{ secrets.GH_PAT }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
